@@ -5,7 +5,7 @@ Text to morse code using my own style.
  
 ````
 def texto_a_morse(texto, caracter):
-    # Diccionario de código Morse
+    # Diccionario de código Morse utilizando "." para punto y "-" para raya
     morse_dict = {
         'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 
         'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 
@@ -17,17 +17,29 @@ def texto_a_morse(texto, caracter):
     }
     
     resultado = []
+    palabras = texto.upper().split()
     
-    for letra in texto.upper():
-        if letra in morse_dict:
-            # Reemplazar los puntos y rayas con el caracter
-            morse = morse_dict[letra].replace('.', caracter).replace('-', caracter*2)
-            resultado.append(morse)
-        else:
-            # Si el carácter no está en el diccionario, se omite
-            continue
+    for palabra in palabras:
+        morse_palabra = []
+        for letra in palabra:
+            if letra in morse_dict:
+                # Convertir el patrón morse a la representación con el carácter
+                codigo = ""
+                for simbolo in morse_dict[letra]:
+                    if simbolo == '.':
+                        codigo += caracter + " "  # Un carácter para punto
+                    elif simbolo == '-':
+                        codigo += caracter*2 + " "  # Dos caracteres para raya
+                
+                # Quitar el espacio extra al final de cada letra
+                codigo = codigo.strip()
+                morse_palabra.append(codigo)
+        
+        # Unir las letras de la palabra con tres espacios
+        resultado.append("   ".join(morse_palabra))
     
-    return ' '.join(resultado)
+    # Unir las palabras con slash rodeado de espacios
+    return " / ".join(resultado)
 
 # Texto que quieres convertir
 texto = "Hola mundo"
@@ -39,5 +51,4 @@ caracter = input("Ingresa un carácter para representar el código Morse: ")
 resultado = texto_a_morse(texto, caracter)
 print(f"Texto original: {texto}")
 print(f"Código Morse (usando '{caracter}'): {resultado}")
-
 ````
